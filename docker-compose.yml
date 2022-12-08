@@ -5,14 +5,41 @@ networks:
 volumes:
     prometheus_data: {}
     grafana_data: {}
+    prometheus_config: {}
+    alertmanager_config: {}
+    grafana_config: {}
 
 services:
+
+  # Workaround to the lack of relative paths volumes in Portainer stacks
+  # see https://github.com/portainer/portainer/issues/6390#issuecomment-1100954657
+  git-checkout:
+    image: bitnami/git:latest
+    working_dir: /temp
+    command: >
+      bash -c "
+        find /temp -mindepth 1 -delete && 
+        git clone https://github.com/axeleroy/dockprom.git &&
+        echo 'Copying ./dockprom/prometheus ...' &&
+        cp -R ./dockprom/prometheus/. /prometheus_config &&
+        echo 'Copying ./dockprom/alertmanager ...' &&
+        cp -R ./dockprom/alertmanager/. /alertmanager_config &&
+        echo 'Copying ./dockprom/grafana/provisioning ...' &&
+        cp -R ./dockprom/grafana/provisioning/. /grafana_config &&
+        echo 'Copying done!'
+      "
+    volumes:
+      - prometheus_config:/prometheus_config
+      - alertmanager_config:/alertmanager_config
+      - grafana_config:/grafana_config
 
   prometheus:
     image: prom/prometheus:v2.51.2
     container_name: prometheus
+    depends_on:
+      - git-checkout
     volumes:
-      - ./prometheus:/etc/prometheus
+      - prometheus_config:/etc/prometheus
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
@@ -34,8 +61,10 @@ services:
   alertmanager:
     image: prom/alertmanager:v0.27.0
     container_name: alertmanager
+    depends_on:
+      - git-checkout
     volumes:
-      - ./alertmanager:/etc/alertmanager
+      - alertmanager_config:/etc/alertmanager
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
@@ -92,10 +121,11 @@ services:
   grafana:
     image: grafana/grafana:10.4.2
     container_name: grafana
+    depends_on:
+      - git-checkout
     volumes:
       - grafana_data:/var/lib/grafana
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana_config:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
