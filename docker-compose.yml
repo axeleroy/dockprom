@@ -10,6 +10,7 @@ volumes:
     prometheus_config: {}
     alertmanager_config: {}
     grafana_config: {}
+    alertmanager_data: {}
 
 services:
 
@@ -67,6 +68,7 @@ services:
       - git-checkout
     volumes:
       - alertmanager_config:/etc/alertmanager
+      - alertmanager_data:/alertmanager
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
