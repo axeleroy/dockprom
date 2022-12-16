@@ -68,3 +68,13 @@ groups:
       summary: "Jenkins high memory usage"
       description: "Jenkins memory consumption is at {{ humanize $value}}."
 
+- name: nut
+  rules:
+  - alert: power_down
+    expr: nut_input_voltage_volts < 200
+    for: 30s
+    labels:
+      severity: critical
+    annotations:
+      summary: "UPS input power down"
+      description: "The UPS's input power has been down for more than 30s"
