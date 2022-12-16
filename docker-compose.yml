@@ -154,7 +154,6 @@ services:
       org.label-schema.group: "monitoring"
 
   nut-exporter:
-    # Stable v1
     image: hon95/prometheus-nut-exporter:1.2.1
     container_name: nut-exporter
     restart: unless-stopped
@@ -163,6 +162,19 @@ services:
       - HTTP_PATH=/metrics
     expose:
       - 9995
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  nginxexporter:
+    image: nginx/nginx-prometheus-exporter:0.11.0
+    container_name: nginx-exporter
+    restart: unless-stopped
+    command:
+      - -nginx.scrape-uri=http://${NGINX_HOST:-localhost}:8080/stub_status/
+    expose:
+      - 9113
     networks:
       - monitor-net
     labels:
