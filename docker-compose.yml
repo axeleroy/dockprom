@@ -152,3 +152,18 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  nut-exporter:
+    # Stable v1
+    image: hon95/prometheus-nut-exporter:1.2.1
+    container_name: nut-exporter
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Paris
+      - HTTP_PATH=/metrics
+    expose:
+      - 9995
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
