@@ -186,3 +186,16 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  pushbullet-gateway:
+    image: axeleroy/am2pushbullet:latest
+    container_name: pushbullet-gateway
+    restart: unless-stopped
+    environment:
+      - PUSHBULLET_KEY=${PUSHBULLET_KEY:-key}
+    expose:
+      - 5001
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
