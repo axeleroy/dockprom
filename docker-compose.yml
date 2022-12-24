@@ -1,6 +1,8 @@
 networks:
   monitor-net:
     driver: bridge
+  caddy-net:
+    external: true
 
 volumes:
     prometheus_data: {}
@@ -56,6 +58,7 @@ services:
       - 9090:9090
     networks:
       - monitor-net
+      - caddy-net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -77,6 +80,7 @@ services:
       - 9093:9093
     networks:
       - monitor-net
+      - caddy-net
     labels:
       org.label-schema.group: "monitoring"
 
@@ -139,6 +143,7 @@ services:
       - 3000:3000
     networks:
       - monitor-net
+      - caddy-net
     labels:
       org.label-schema.group: "monitoring"
 
