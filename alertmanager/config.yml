@@ -1,11 +1,7 @@
 route:
-    receiver: 'slack'
+    receiver: 'pushbullet'
 
 receivers:
-    - name: 'slack'
-      slack_configs:
-          - send_resolved: true
-            text: "{{ .CommonAnnotations.description }}"
-            username: 'Prometheus'
-            channel: '#<channel-name>'
-            api_url: 'https://hooks.slack.com/services/<webhook-id>'
+    - name: 'pushbullet'
+      webhook_configs:
+          - url: http://pushbullet-gateway:5001/alert
