@@ -191,3 +191,19 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+
+  pihole-exporter:
+    image: ekofr/pihole-exporter:v0.3.0
+    container_name: pihole-exporter
+    restart: unless-stopped
+    environment:
+      - PIHOLE_HOSTNAME=pihole
+      - PIHOLE_PASSWORD=${PIHOLE_PASSWORD:-pihole}
+      - PORT=9617
+    networks:
+      - monitor-net
+    expose:
+      - 9617
+    labels:
+      org.label-schema.group: "monitoring"
+
