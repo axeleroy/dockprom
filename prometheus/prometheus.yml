@@ -50,6 +50,10 @@ scrape_configs:
     static_configs:
       - targets: [ 'nginxexporter:9113' ]
 
+  - job_name: 'pihole'
+    static_configs:
+      - targets: [ 'pihole-exporter:9617' ]
+
 alerting:
   alertmanagers:
   - scheme: http
