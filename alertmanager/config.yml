@@ -1,7 +1,8 @@
 route:
-    receiver: 'pushbullet'
+    receiver: 'pushover'
 
 receivers:
-    - name: 'pushbullet'
-      webhook_configs:
-          - url: http://pushbullet-gateway:5001/alert
+    - name: 'pushover'
+      pushover_configs:
+          - user_key: <PUSHOVER_USER_KEY>
+          - token: <PUSHOVER_KEY>
