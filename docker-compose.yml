@@ -21,11 +21,13 @@ services:
     working_dir: /temp
     command: >
       bash -c "
-        find /temp -mindepth 1 -delete && 
+        find ./dockprom -mindepth 1 -delete && 
         git clone https://github.com/axeleroy/dockprom.git &&
         echo 'Copying ./dockprom/prometheus ...' &&
         cp -R ./dockprom/prometheus/. /prometheus_config &&
         echo 'Copying ./dockprom/alertmanager ...' &&
+        sed -i \"s/<PUSHOVER_USER_KEY>/$PUSHOVER_USER_KEY/g\" /dockprom/alertmanager/config.yml &&
+        sed -i \"s/<PUSHOVER_TOKEN>/$PUSHOVER_TOKEN/g\" /dockprom/alertmanager/config.yml &&
         cp -R ./dockprom/alertmanager/. /alertmanager_config &&
         echo 'Copying ./dockprom/grafana/provisioning ...' &&
         cp -R ./dockprom/grafana/provisioning/. /grafana_config &&
@@ -175,19 +177,6 @@ services:
       - -nginx.scrape-uri=http://${NGINX_HOST:-localhost}:8080/stub_status/
     expose:
       - 9113
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  pushbullet-gateway:
-    image: axeleroy/am2pushbullet:latest
-    container_name: pushbullet-gateway
-    restart: unless-stopped
-    environment:
-      - PUSHBULLET_KEY=${PUSHBULLET_KEY:-key}
-    expose:
-      - 5001
     networks:
       - monitor-net
     labels:
