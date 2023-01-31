@@ -170,6 +170,8 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+      com.centurylinklabs.watchtower.enable: "true"
+      com.centurylinklabs.watchtower.monitor-only: "true"
 
   nginxexporter:
     image: nginx/nginx-prometheus-exporter:0.11.0
@@ -183,6 +185,8 @@ services:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
+      com.centurylinklabs.watchtower.enable: "true"
+      com.centurylinklabs.watchtower.monitor-only: "true"
 
   pihole-exporter:
     image: ekofr/pihole-exporter:v0.3.0
@@ -198,4 +202,6 @@ services:
       - 9617
     labels:
       org.label-schema.group: "monitoring"
+      com.centurylinklabs.watchtower.enable: "true"
+      com.centurylinklabs.watchtower.monitor-only: "true"
 
