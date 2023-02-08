@@ -20,8 +20,7 @@ services:
     image: bitnami/git:latest
     working_dir: /temp
     command: >
-      bash -c "
-        find ./dockprom -mindepth 1 -delete && 
+      bash -c " 
         git clone https://github.com/axeleroy/dockprom.git &&
         echo 'Copying ./dockprom/prometheus ...' &&
         sed -i \"s/<UPTIME_KUMA_USERNAME>/$UPTIME_KUMA_USERNAME/g\" ./dockprom/prometheus/prometheus.yml &&
@@ -39,6 +38,11 @@ services:
       - prometheus_config:/prometheus_config
       - alertmanager_config:/alertmanager_config
       - grafana_config:/grafana_config
+    environment:
+      - UPTIME_KUMA_USERNAME
+      - UPTIME_KUMA_PASSWORD
+      - PUSHOVER_USER_KEY
+      - PUSHOVER_TOKEN
 
   prometheus:
     image: prom/prometheus:v2.51.2
