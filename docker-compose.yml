@@ -24,10 +24,12 @@ services:
         find ./dockprom -mindepth 1 -delete && 
         git clone https://github.com/axeleroy/dockprom.git &&
         echo 'Copying ./dockprom/prometheus ...' &&
+        sed -i \"s/<UPTIME_KUMA_USERNAME>/$UPTIME_KUMA_USERNAME/g\" ./dockprom/prometheus/prometheus.yml &&
+        sed -i \"s/<UPTIME_KUMA_PASSWORD>/$UPTIME_KUMA_PASSWORD/g\" ./dockprom/prometheus/prometheus.yml &&
         cp -R ./dockprom/prometheus/. /prometheus_config &&
         echo 'Copying ./dockprom/alertmanager ...' &&
-        sed -i \"s/<PUSHOVER_USER_KEY>/$PUSHOVER_USER_KEY/g\" /dockprom/alertmanager/config.yml &&
-        sed -i \"s/<PUSHOVER_TOKEN>/$PUSHOVER_TOKEN/g\" /dockprom/alertmanager/config.yml &&
+        sed -i \"s/<PUSHOVER_USER_KEY>/$PUSHOVER_USER_KEY/g\" ./dockprom/alertmanager/config.yml &&
+        sed -i \"s/<PUSHOVER_TOKEN>/$PUSHOVER_TOKEN/g\" ./dockprom/alertmanager/config.yml &&
         cp -R ./dockprom/alertmanager/. /alertmanager_config &&
         echo 'Copying ./dockprom/grafana/provisioning ...' &&
         cp -R ./dockprom/grafana/provisioning/. /grafana_config &&
