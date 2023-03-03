@@ -189,7 +189,7 @@ services:
       org.label-schema.group: "monitoring"
 
   pihole-exporter:
-    image: ekofr/pihole-exporter:v0.3.0
+    image: ekofr/pihole-exporter:v0.4.0
     container_name: pihole-exporter
     restart: unless-stopped
     environment:
