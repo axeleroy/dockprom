@@ -5,4 +5,4 @@ receivers:
     - name: 'pushover'
       pushover_configs:
           - user_key: <PUSHOVER_USER_KEY>
-          - token: <PUSHOVER_TOKEN>
+            token: <PUSHOVER_TOKEN>
