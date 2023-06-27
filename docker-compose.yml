@@ -11,6 +11,8 @@ volumes:
     alertmanager_config: {}
     grafana_config: {}
     alertmanager_data: {}
+    uptime-kuma_data:
+      external: true
 
 services:
 
@@ -202,4 +204,20 @@ services:
       - 9617
     labels:
       org.label-schema.group: "monitoring"
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:1.22.0
+    container_name: uptime-kuma
+    expose:
+      - 3001
+    volumes:
+      - uptime-kuma_data:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - caddy-net
+      - monitor-net
+    restart: unless-stopped
+    dns:
+      - 1.1.1.1
+      - 9.9.9.9
 
