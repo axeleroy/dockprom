@@ -72,6 +72,12 @@ services:
       caddy: prometheus.local.axeleroy.com
       caddy.reverse_proxy: "{{upstreams 9090}}"
       caddy.import: ovh
+      homepage.group: Monitoring
+      homepage.name: Prometheus
+      homepage.icon: prometheus
+      homepage.href: https://prometheus.local.axeleroy.com
+      homepage.widget.type: prometheus
+      homepage.widget.url: http://prometheus:9090
 
   alertmanager:
     image: prom/alertmanager:v0.27.0
@@ -95,6 +101,10 @@ services:
       caddy: alertmanager.local.axeleroy.com
       caddy.reverse_proxy: "{{upstreams 9093}}"
       caddy.import: ovh
+      homepage.group: Monitoring
+      homepage.name: Alert Manager
+      homepage.icon: alertmanager
+      homepage.href: https://alertmanager.local.axeleroy.com
 
   nodeexporter:
     image: prom/node-exporter:v1.8.0
@@ -160,6 +170,14 @@ services:
       caddy: grafana.local.axeleroy.com
       caddy.reverse_proxy: "{{upstreams 3000}}"
       caddy.import: ovh
+      homepage.group: Monitoring
+      homepage.name: Grafana
+      homepage.icon: grafana
+      homepage.href: https://grafana.local.axeleroy.com
+      homepage.widget.type: grafana
+      homepage.widget.url: http://grafana:3000
+      homepage.widget.user: ${ADMIN_USER:-admin}
+      homepage.widget.password: ${ADMIN_PASSWORD:-admin}
 
   pushgateway:
     image: prom/pushgateway:v1.8.0
@@ -215,7 +233,7 @@ services:
       org.label-schema.group: "monitoring"
 
   uptime-kuma:
-    image: louislam/uptime-kuma:1.23.8
+    image: louislam/uptime-kuma:1.23.10
     container_name: uptime-kuma
     expose:
       - 3001
@@ -234,4 +252,12 @@ services:
       caddy: uptime.local.axeleroy.com
       caddy.reverse_proxy: "{{upstreams 3001}}"
       caddy.import: ovh
+      homepage.group: Monitoring
+      homepage.name: Uptime Kuma
+      homepage.icon: uptime-kuma
+      homepage.href: https://uptime.local.axeleroy.com
+      homepage.widget.type: uptimekuma
+      homepage.widget.url: http://uptime-kuma:3001
+      homepage.widget.slug: default
+      
 
