@@ -13,6 +13,8 @@ volumes:
     alertmanager_data: {}
     uptime-kuma_data:
       external: true
+    promtail_config: {}
+    loki_config: {}
 
 services:
 
@@ -34,12 +36,18 @@ services:
         cp -R ./dockprom/alertmanager/. /alertmanager_config &&
         echo 'Copying ./dockprom/grafana/provisioning ...' &&
         cp -R ./dockprom/grafana/provisioning/. /grafana_config &&
+        echo 'Copying ./dockprom/promtail ...' &&
+        cp -R ./dockprom/promtail/. /promtail_config &&
+        echo 'Copying ./dockprom/loki ...' &&
+        cp -R ./dockprom/loki/. /loki_config &&
         echo 'Copying done!'
       "
     volumes:
       - prometheus_config:/prometheus_config
       - alertmanager_config:/alertmanager_config
       - grafana_config:/grafana_config
+      - loki_config:/loki_config
+      - promtail_config:/promtail_config
     environment:
       - UPTIME_KUMA_USERNAME
       - UPTIME_KUMA_PASSWORD
@@ -178,6 +186,36 @@ services:
       homepage.widget.url: http://grafana:3000
       homepage.widget.user: ${ADMIN_USER:-admin}
       homepage.widget.password: ${ADMIN_PASSWORD:-admin}
+
+  loki:
+    image: grafana/loki:2.9.4
+    expose:
+      - 3100
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - monitor-net
+    restart: unless-stopped
+    depends_on:
+      - git-checkout
+    volumes:
+      - loki_config:/etc/loki
+    labels:
+      org.label-schema.group: "monitoring"
+  
+  promtail:
+    image: grafana/promtail:2.9.4
+    volumes:
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - promtail_config:/etc/promtail
+    command: -config.file=/etc/promtail/config.yml
+    restart: unless-stopped
+    depends_on:
+      - git-checkout
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
 
   pushgateway:
     image: prom/pushgateway:v1.8.0
