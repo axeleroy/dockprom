@@ -210,7 +210,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - promtail_config:/etc/promtail
-    command: -config.file=/etc/promtail/promtail-config.yml
+    command: -config.file=/etc/promtail/promtail-config.yaml
     restart: unless-stopped
     depends_on:
       - git-checkout
